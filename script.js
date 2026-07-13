@@ -116,13 +116,33 @@ if ("IntersectionObserver" in window && sections.length) {
 // Dynamic footer year
 document.getElementById("footer-year").textContent = new Date().getFullYear();
 
+// Dynamic repo count in hero-stats
+(function() {
+  var el = document.getElementById("repo-count");
+  if (!el) return;
+
+  fetch("https://api.github.com/users/Sajedur0/repos?per_page=1")
+    .then(function(res) {
+      var link = res.headers.get("Link");
+      if (link && link.includes('rel="last"')) {
+        var match = link.match(/page=(\d+)>; rel="last"/);
+        if (match) { el.textContent = match[1]; return; }
+      }
+      return res.json();
+    })
+    .then(function(repos) {
+      if (Array.isArray(repos)) el.textContent = repos.length;
+    })
+    .catch(function() {});
+})();
+
 // Dynamic GitHub Projects
 (function() {
   var grid = document.getElementById("projects-grid");
   if (!grid) return;
 
   var CACHE_KEY = "gh_repos_cache";
-  var CACHE_TTL = 60 * 60 * 1000;
+  var CACHE_TTL = 5 * 60 * 1000;
 
   function getCached() {
     try {
