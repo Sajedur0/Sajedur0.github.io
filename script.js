@@ -121,65 +121,115 @@ document.getElementById("footer-year").textContent = new Date().getFullYear();
   var grid = document.getElementById("projects-grid");
   if (!grid) return;
 
-  fetch("https://api.github.com/users/Sajedur0/repos?sort=updated&per_page=100")
-    .then(function(res) { return res.json(); })
-    .then(function(repos) {
-      grid.innerHTML = "";
-      var shown = repos.slice(0, 9);
+  var CACHE_KEY = "gh_repos_cache";
+  var CACHE_TTL = 60 * 60 * 1000;
 
-      shown.forEach(function(repo) {
-        var card = document.createElement("a");
-        card.href = repo.html_url;
-        card.target = "_blank";
-        card.rel = "noopener noreferrer";
-        card.className = "card project-card reveal";
+  function getCached() {
+    try {
+      var raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      if (Date.now() - data.ts > CACHE_TTL) return null;
+      return data.repos;
+    } catch (e) { return null; }
+  }
 
-        var meta = "";
-        if (repo.stargazers_count > 0 || repo.forks_count > 0) {
-          meta = '<div class="project-meta">';
-          if (repo.stargazers_count > 0) meta += '<span class="stars">&#9733; ' + repo.stargazers_count + '</span>';
-          if (repo.forks_count > 0) meta += '<span class="forks">' + repo.forks_count + ' forks</span>';
-          meta += '</div>';
-        }
+  function setCache(repos) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), repos: repos })); } catch (e) {}
+  }
 
-        var desc = repo.description ? repo.description : "No description available.";
-        var lang = repo.language ? repo.language : "N/A";
+  function renderRepos(repos) {
+    grid.innerHTML = "";
+    var shown = repos.slice(0, 9);
 
-        card.innerHTML = meta +
-          '<h3 class="project-name">' + repo.name + '</h3>' +
-          '<p class="text-muted text-sm">' + desc + '</p>' +
-          '<span class="tag">' + lang + '</span>';
+    shown.forEach(function(repo) {
+      var card = document.createElement("a");
+      card.href = repo.html_url;
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+      card.className = "card project-card reveal";
 
-        grid.appendChild(card);
-      });
-
-      if (repos.length > 9) {
-        var allCard = document.createElement("a");
-        allCard.href = "projects.html";
-        allCard.className = "card project-card project-card-last reveal";
-        allCard.innerHTML = '<h3 class="project-name">See all repos</h3>' +
-          '<p class="text-muted text-sm">Browse all ' + repos.length + ' public repositories.</p>' +
-          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>';
-        grid.appendChild(allCard);
+      var meta = "";
+      if (repo.stargazers_count > 0 || repo.forks_count > 0) {
+        meta = '<div class="project-meta">';
+        if (repo.stargazers_count > 0) meta += '<span class="stars">&#9733; ' + repo.stargazers_count + '</span>';
+        if (repo.forks_count > 0) meta += '<span class="forks">' + repo.forks_count + ' forks</span>';
+        meta += '</div>';
       }
 
-      grid.querySelectorAll(".reveal").forEach(function(el) {
-        if ("IntersectionObserver" in window) {
-          var obs = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("revealed");
-                obs.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0.15 });
-          obs.observe(el);
+      var desc = repo.description ? repo.description : "No description available.";
+      var lang = repo.language ? repo.language : "N/A";
+
+      card.innerHTML = meta +
+        '<h3 class="project-name">' + repo.name + '</h3>' +
+        '<p class="text-muted text-sm">' + desc + '</p>' +
+        '<span class="tag">' + lang + '</span>';
+
+      grid.appendChild(card);
+    });
+
+    if (repos.length > 9) {
+      var allCard = document.createElement("a");
+      allCard.href = "projects.html";
+      allCard.className = "card project-card project-card-last reveal";
+      allCard.innerHTML = '<h3 class="project-name">See all repos</h3>' +
+        '<p class="text-muted text-sm">Browse all ' + repos.length + ' public repositories.</p>' +
+        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>';
+      grid.appendChild(allCard);
+    }
+
+    grid.querySelectorAll(".reveal").forEach(function(el) {
+      if ("IntersectionObserver" in window) {
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        obs.observe(el);
+      } else {
+        el.classList.add("revealed");
+      }
+    });
+  }
+
+  function showError() {
+    var cached = getCached();
+    if (cached) {
+      renderRepos(cached);
+      return;
+    }
+    grid.innerHTML = '<p class="text-muted text-sm">Could not load projects. <a href="https://github.com/Sajedur0?tab=repositories" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>';
+  }
+
+  var cached = getCached();
+  if (cached) {
+    renderRepos(cached);
+    return;
+  }
+
+  var retries = 3;
+  function fetchWithRetry() {
+    fetch("https://api.github.com/users/Sajedur0/repos?sort=updated&per_page=100")
+      .then(function(res) {
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      })
+      .then(function(repos) {
+        setCache(repos);
+        renderRepos(repos);
+      })
+      .catch(function() {
+        retries--;
+        if (retries > 0) {
+          setTimeout(fetchWithRetry, 1500);
         } else {
-          el.classList.add("revealed");
+          showError();
         }
       });
-    })
-    .catch(function() {
-      grid.innerHTML = '<p class="text-muted text-sm">Failed to load projects. <a href="https://github.com/Sajedur0?tab=repositories" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>';
-    });
+  }
+
+  fetchWithRetry();
 })();

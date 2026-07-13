@@ -63,40 +63,76 @@
 
       (function() {
         var grid = document.getElementById("all-projects-grid");
+        var CACHE_KEY = "gh_repos_cache";
+        var CACHE_TTL = 60 * 60 * 1000;
 
-        fetch("https://api.github.com/users/Sajedur0/repos?sort=updated&per_page=100")
-          .then(function(res) { return res.json(); })
-          .then(function(repos) {
-            grid.innerHTML = "";
-            repos.forEach(function(repo) {
-              var card = document.createElement("a");
-              card.href = repo.html_url;
-              card.target = "_blank";
-              card.rel = "noopener noreferrer";
-              card.className = "card project-card";
+        function getCached() {
+          try {
+            var raw = localStorage.getItem(CACHE_KEY);
+            if (!raw) return null;
+            var data = JSON.parse(raw);
+            if (Date.now() - data.ts > CACHE_TTL) return null;
+            return data.repos;
+          } catch (e) { return null; }
+        }
 
-              var meta = "";
-              if (repo.stargazers_count > 0 || repo.forks_count > 0) {
-                meta = '<div class="project-meta">';
-                if (repo.stargazers_count > 0) meta += '<span class="stars">&#9733; ' + repo.stargazers_count + '</span>';
-                if (repo.forks_count > 0) meta += '<span class="forks">' + repo.forks_count + ' forks</span>';
-                meta += '</div>';
-              }
+        function renderRepos(repos) {
+          grid.innerHTML = "";
+          repos.forEach(function(repo) {
+            var card = document.createElement("a");
+            card.href = repo.html_url;
+            card.target = "_blank";
+            card.rel = "noopener noreferrer";
+            card.className = "card project-card";
 
-              var desc = repo.description ? repo.description : "No description available.";
-              var lang = repo.language ? repo.language : "N/A";
+            var meta = "";
+            if (repo.stargazers_count > 0 || repo.forks_count > 0) {
+              meta = '<div class="project-meta">';
+              if (repo.stargazers_count > 0) meta += '<span class="stars">&#9733; ' + repo.stargazers_count + '</span>';
+              if (repo.forks_count > 0) meta += '<span class="forks">' + repo.forks_count + ' forks</span>';
+              meta += '</div>';
+            }
 
-              card.innerHTML = meta +
-                '<h3 class="project-name">' + repo.name + '</h3>' +
-                '<p class="text-muted text-sm">' + desc + '</p>' +
-                '<span class="tag">' + lang + '</span>';
+            var desc = repo.description ? repo.description : "No description available.";
+            var lang = repo.language ? repo.language : "N/A";
 
-              grid.appendChild(card);
-            });
-          })
-          .catch(function() {
-            grid.innerHTML = '<p class="text-muted text-sm">Failed to load projects.</p>';
+            card.innerHTML = meta +
+              '<h3 class="project-name">' + repo.name + '</h3>' +
+              '<p class="text-muted text-sm">' + desc + '</p>' +
+              '<span class="tag">' + lang + '</span>';
+
+            grid.appendChild(card);
           });
+        }
+
+        var cached = getCached();
+        if (cached) { renderRepos(cached); return; }
+
+        var retries = 3;
+        function fetchWithRetry() {
+          fetch("https://api.github.com/users/Sajedur0/repos?sort=updated&per_page=100")
+            .then(function(res) {
+              if (!res.ok) throw new Error(res.status);
+              return res.json();
+            })
+            .then(function(repos) {
+              try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), repos: repos })); } catch (e) {}
+              renderRepos(repos);
+            })
+            .catch(function() {
+              retries--;
+              if (retries > 0) {
+                setTimeout(fetchWithRetry, 1500);
+              } else {
+                var old = getCached();
+                if (old) { renderRepos(old); } else {
+                  grid.innerHTML = '<p class="text-muted text-sm">Could not load projects.</p>';
+                }
+              }
+            });
+        }
+
+        fetchWithRetry();
       })();
     </script>
   </body>
