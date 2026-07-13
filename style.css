@@ -80,25 +80,6 @@ button:focus-visible {
 .section-head { margin-bottom: 52px; }
 .section-head.text-center { display: flex; flex-direction: column; align-items: center; }
 
-.section-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-.section-tag::before {
-  content: "";
-  width: 14px;
-  height: 1px;
-  background: var(--accent);
-  opacity: 0.6;
-}
-
 .section-heading {
   font-size: clamp(1.5rem, 2.2vw + 0.9rem, 2.25rem);
   font-weight: 700;
@@ -227,8 +208,8 @@ button:focus-visible {
 }
 
 .logo {
-  width: 42px;
   height: 42px;
+  padding: 0 18px;
   border-radius: 13px;
   background: var(--bg);
   box-shadow: 5px 5px 10px var(--shadow-d), -5px -5px 10px var(--shadow-l);
@@ -620,7 +601,7 @@ button:focus-visible {
   .contact-item { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
   .contact-icon { width: 40px; height: 40px; }
 
-  .logo { width: 38px; height: 38px; }
+  .logo { height: 38px; padding: 0 14px; }
   #menu-toggle { width: 38px; height: 38px; }
 }
 
