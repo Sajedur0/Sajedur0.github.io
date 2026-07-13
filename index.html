@@ -16,14 +16,14 @@
   <body>
     <header id="site-header">
       <nav class="nav-container">
-        <a href="/home" class="logo">Sajedur0</a>
+        <a href="#home" class="logo">Sajedur0</a>
 
         <ul class="nav-links">
-          <li><a href="/about">About</a></li>
-          <li><a href="/skills">Skills</a></li>
-          <li><a href="/experience">Experience</a></li>
-          <li><a href="/projects">Projects</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
 
         <button id="menu-toggle" aria-label="Toggle menu">
@@ -40,11 +40,11 @@
 
       <div id="mobile-menu" class="mobile-menu">
         <ul>
-          <li><a href="/about">About</a></li>
-          <li><a href="/skills">Skills</a></li>
-          <li><a href="/experience">Experience</a></li>
-          <li><a href="/projects">Projects</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
     </header>
@@ -59,7 +59,7 @@
               Software & Hardware enthusiast — building Android apps, desktop applications, and web tools from Narsingdi, Dhaka, Bangladesh.
             </p>
             <div class="hero-buttons">
-              <a href="/contact" class="btn-accent">Get in touch</a>
+              <a href="#contact" class="btn-accent">Get in touch</a>
               <a href="https://github.com/Sajedur0" target="_blank" rel="noopener noreferrer" class="btn-neu">View GitHub</a>
             </div>
             <div class="hero-stats">
@@ -232,46 +232,8 @@
           <div class="section-head text-center">
             <h2 class="section-heading">Projects</h2>
           </div>
-          <div class="projects-grid">
-            <a href="https://github.com/Sajedur0/Project-Backup-Tools" target="_blank" rel="noopener noreferrer" class="card project-card reveal">
-              <h3 class="project-name">Project-Backup-Tools</h3>
-              <p class="text-muted text-sm">A Flutter desktop app that backs up development projects with a single click.</p>
-              <span class="tag">Dart</span>
-            </a>
-
-            <a href="https://github.com/Sajedur0/FRP" target="_blank" rel="noopener noreferrer" class="card project-card reveal">
-              <div class="project-meta">
-                <span class="stars">&#9733; 25</span>
-                <span class="forks">3 forks</span>
-              </div>
-              <h3 class="project-name">FRP</h3>
-              <p class="text-muted text-sm">Android FRP Bypass Tool — the most starred repo in my profile.</p>
-              <span class="tag">N/A</span>
-            </a>
-
-            <a href="https://github.com/Sajedur0/Icon-Maker" target="_blank" rel="noopener noreferrer" class="card project-card reveal">
-              <h3 class="project-name">Icon-Maker</h3>
-              <p class="text-muted text-sm">A lightweight C++ utility for generating application icons.</p>
-              <span class="tag">C++</span>
-            </a>
-
-            <a href="https://github.com/Sajedur0/Google-Photos-Remover" target="_blank" rel="noopener noreferrer" class="card project-card reveal">
-              <h3 class="project-name">Google-Photos-Remover</h3>
-              <p class="text-muted text-sm">A JavaScript tool to help manage and clean up Google Photos libraries.</p>
-              <span class="tag">JavaScript</span>
-            </a>
-
-            <a href="https://github.com/Sajedur0/Python-Tools" target="_blank" rel="noopener noreferrer" class="card project-card reveal">
-              <h3 class="project-name">Python-Tools</h3>
-              <p class="text-muted text-sm">A collection of small Python utility scripts.</p>
-              <span class="tag">Python</span>
-            </a>
-
-            <a href="https://github.com/Sajedur0?tab=repositories" target="_blank" rel="noopener noreferrer" class="card project-card project-card-last reveal">
-              <h3 class="project-name">See all repos</h3>
-              <p class="text-muted text-sm">Browse all my public repositories on GitHub.</p>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-            </a>
+          <div class="projects-grid" id="projects-grid">
+            <div class="project-loading">Loading projects...</div>
           </div>
         </div>
       </section>
@@ -317,8 +279,7 @@
     </main>
 
     <footer class="footer">
-      <p class="text-sm text-muted">&copy; 2024 MD Sajedur Rahman Roni. All rights reserved.</p>
-      <p class="text-xs text-muted-light">Narsingdi, Bangladesh</p>
+      <p class="text-sm text-muted">&copy; <span id="footer-year"></span> Sajedur0. All rights reserved.</p>
     </footer>
 
     <script src="script.js"></script>

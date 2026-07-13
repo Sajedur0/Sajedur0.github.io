@@ -496,6 +496,14 @@ button:focus-visible {
 .arrow-icon { color: var(--accent); transition: transform 0.25s ease; }
 .project-card-last:hover .arrow-icon { transform: translate(2px, -2px); }
 
+.project-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 0;
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+}
+
 /* ===========================================================
    Contact
    =========================================================== */
