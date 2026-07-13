@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MD Sajedur Rahman Roni — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header id="site-header">
+      <nav class="nav-container">
+        <a href="#hero" class="logo">SR</a>
+
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <button id="menu-toggle" aria-label="Toggle menu">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 5H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M3 10H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M3 15H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 20 20" fill="none" style="display:none">
+            <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </nav>
+
+      <div id="mobile-menu" class="mobile-menu">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="hero">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <span class="eyebrow">Available for IT & dev work</span>
+            <h1 class="hero-headline">MD Sajedur Rahman Roni</h1>
+            <p class="hero-subtitle">
+              IT Assistant & hardware/network specialist in Narsingdi, Bangladesh — now building Flutter apps and web tools on the side.
+            </p>
+            <div class="hero-buttons">
+              <a href="#contact" class="btn-accent">Get in touch</a>
+              <a href="https://github.com/Sajedur0" target="_blank" rel="noopener noreferrer" class="btn-neu">View GitHub</a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat">
+                <div class="stat-value">3+</div>
+                <div class="stat-label">Years in IT</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">6+</div>
+                <div class="stat-label">GitHub Repos</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Languages</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-image-wrap">
+            <div class="hero-image-box">
+              <img src="https://avatars.githubusercontent.com/u/31769074?v=4" alt="Sajedur Rahman Roni" />
+            </div>
+            <div class="float-dot dot-1"></div>
+            <div class="float-dot dot-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="container container-sm">
+          <h2 class="section-heading text-center">About Me</h2>
+          <div class="card">
+            <p class="text-muted text-lg leading-relaxed">
+              I'm looking to join an organization where I can put my technical training and hands-on IT experience to work — keeping systems, networks, and hardware running smoothly while growing into more development-focused work. I'm confident, adaptable, and genuinely enjoy solving problems, whether that's untangling a network issue or shipping a small app.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="section">
+        <div class="container">
+          <h2 class="section-heading text-center">Skills</h2>
+          <div class="skills-grid">
+            <div class="card skill-card">
+              <div class="icon-well">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2" /><rect x="9" y="9" width="6" height="6" rx="1" /><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4" /></svg>
+              </div>
+              <h3 class="skill-title">Hardware & Systems</h3>
+              <ul class="skill-list">
+                <li>Computers, printers, scanners, network equipment</li>
+                <li>System administration</li>
+                <li>Software installation</li>
+                <li>Tech support & troubleshooting</li>
+              </ul>
+            </div>
+
+            <div class="card skill-card">
+              <div class="icon-well">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v5c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z" /><path d="M9 12l2 2 4-4" /></svg>
+              </div>
+              <h3 class="skill-title">Networking & Security</h3>
+              <ul class="skill-list">
+                <li>Wired & wireless networks, routers, switches</li>
+                <li>Firewalls & intrusion detection</li>
+                <li>Antivirus & endpoint protection</li>
+              </ul>
+            </div>
+
+            <div class="card skill-card">
+              <div class="icon-well">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+              </div>
+              <h3 class="skill-title">Development</h3>
+              <ul class="skill-list">
+                <li>Flutter / Dart</li>
+                <li>JavaScript, Python, C++</li>
+                <li>Git & GitHub workflows</li>
+              </ul>
+            </div>
+
+            <div class="card skill-card">
+              <div class="icon-well">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+              </div>
+              <h3 class="skill-title">Productivity Tools</h3>
+              <ul class="skill-list">
+                <li>MS Office (Word, Excel, PowerPoint, Outlook)</li>
+                <li>Google Workspace (Docs, Sheets, Forms)</li>
+              </ul>
+            </div>
+
+            <div class="card skill-card">
+              <div class="icon-well">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="8" r="1.5" fill="currentColor" /><circle cx="8" cy="12" r="1.5" fill="currentColor" /><circle cx="16" cy="10" r="1.5" fill="currentColor" /><circle cx="14" cy="15" r="1.5" fill="currentColor" /></svg>
+              </div>
+              <h3 class="skill-title">Graphics & Media</h3>
+              <ul class="skill-list">
+                <li>Photoshop, Illustrator</li>
+                <li>Premiere Pro</li>
+              </ul>
+            </div>
+
+            <div class="card skill-card">
+              <div class="icon-well">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" /></svg>
+              </div>
+              <h3 class="skill-title">Languages</h3>
+              <ul class="skill-list">
+                <li>Bangla — Excellent (reading, writing, speaking)</li>
+                <li>English — Good (reading, writing, speaking)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" class="section">
+        <div class="container exp-grid">
+          <div class="card exp-card">
+            <div class="exp-header">
+              <span class="exp-badge accent">01</span>
+              <h2 class="exp-heading">Experience</h2>
+            </div>
+            <div class="exp-item">
+              <h3 class="exp-role">IT Assistant</h3>
+              <p class="text-muted text-sm">Abed Textile Processing Mills Ltd.</p>
+              <p class="text-muted text-sm">Information Technology Section</p>
+              <p class="text-muted text-xs">Ghoradia, Narsingdi</p>
+              <span class="tag accent">2022 — Present</span>
+            </div>
+          </div>
+
+          <div class="card exp-card">
+            <div class="exp-header">
+              <span class="exp-badge teal">02</span>
+              <h2 class="exp-heading">Education</h2>
+            </div>
+            <div class="exp-item">
+              <h3 class="exp-role">HSC — Computer Operation</h3>
+              <p class="text-muted text-sm">Technical Board</p>
+              <div class="tags">
+                <span class="tag">2021</span>
+                <span class="tag teal">GPA 4.50</span>
+              </div>
+            </div>
+            <div class="exp-item">
+              <h3 class="exp-role">SSC — Business Studies</h3>
+              <p class="text-muted text-sm">Dhaka Board</p>
+              <div class="tags">
+                <span class="tag">2016</span>
+                <span class="tag teal">GPA 2.83</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section">
+        <div class="container">
+          <h2 class="section-heading text-center">Projects</h2>
+          <div class="projects-grid">
+            <a href="https://github.com/Sajedur0/Project-Backup-Tools" target="_blank" rel="noopener noreferrer" class="card project-card">
+              <h3 class="project-name">Project-Backup-Tools</h3>
+              <p class="text-muted text-sm">A Flutter desktop app that backs up development projects with a single click.</p>
+              <span class="tag">Dart</span>
+            </a>
+
+            <a href="https://github.com/Sajedur0/FRP" target="_blank" rel="noopener noreferrer" class="card project-card">
+              <div class="project-meta">
+                <span class="stars">&#9733; 25</span>
+                <span class="forks">3 forks</span>
+              </div>
+              <h3 class="project-name">FRP</h3>
+              <p class="text-muted text-sm">Android FRP Bypass Tool — the most starred repo in my profile.</p>
+              <span class="tag">N/A</span>
+            </a>
+
+            <a href="https://github.com/Sajedur0/Icon-Maker" target="_blank" rel="noopener noreferrer" class="card project-card">
+              <h3 class="project-name">Icon-Maker</h3>
+              <p class="text-muted text-sm">A lightweight C++ utility for generating application icons.</p>
+              <span class="tag">C++</span>
+            </a>
+
+            <a href="https://github.com/Sajedur0/Google-Photos-Remover" target="_blank" rel="noopener noreferrer" class="card project-card">
+              <h3 class="project-name">Google-Photos-Remover</h3>
+              <p class="text-muted text-sm">A JavaScript tool to help manage and clean up Google Photos libraries.</p>
+              <span class="tag">JavaScript</span>
+            </a>
+
+            <a href="https://github.com/Sajedur0/Python-Tools" target="_blank" rel="noopener noreferrer" class="card project-card">
+              <h3 class="project-name">Python-Tools</h3>
+              <p class="text-muted text-sm">A collection of small Python utility scripts.</p>
+              <span class="tag">Python</span>
+            </a>
+
+            <a href="https://github.com/Sajedur0?tab=repositories" target="_blank" rel="noopener noreferrer" class="card project-card project-card-last">
+              <h3 class="project-name">See all repos</h3>
+              <p class="text-muted text-sm">Browse all my public repositories on GitHub.</p>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section">
+        <div class="container container-xs">
+          <h2 class="section-heading text-center">Get in Touch</h2>
+          <div class="card contact-card">
+            <a href="tel:01400-207570" class="contact-item">
+              <span class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" /></svg>
+              </span>
+              <div class="contact-info">
+                <span class="contact-label">Phone</span>
+                <span class="contact-detail">01400-207570</span>
+              </div>
+            </a>
+
+            <a href="https://github.com/Sajedur0" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <span class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
+              </span>
+              <div class="contact-info">
+                <span class="contact-label">GitHub</span>
+                <span class="contact-detail">github.com/Sajedur0</span>
+              </div>
+            </a>
+
+            <a href="https://twitter.com/Sajedur0" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <span class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+              </span>
+              <div class="contact-info">
+                <span class="contact-label">Twitter / X</span>
+                <span class="contact-detail">twitter.com/Sajedur0</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p class="text-sm text-muted">&copy; 2024 MD Sajedur Rahman Roni. All rights reserved.</p>
+      <p class="text-xs text-muted-light">Narsingdi, Bangladesh</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
