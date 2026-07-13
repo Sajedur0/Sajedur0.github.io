@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <script>
+      var path = window.location.pathname.replace(/\/$/, '');
+      var knownSections = ['about', 'skills', 'experience', 'projects', 'contact'];
+      var segment = path.split('/').pop();
+
+      if (segment === 'home' || segment === '' || segment === 'index.html') {
+        window.location.replace('/');
+      } else if (knownSections.indexOf(segment) !== -1) {
+        window.location.replace('/#' + segment);
+      } else {
+        window.location.replace('/');
+      }
+    </script>
+  </body>
+</html>
