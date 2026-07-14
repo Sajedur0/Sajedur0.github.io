@@ -61,20 +61,10 @@
     <script>
       document.getElementById("footer-year").textContent = new Date().getFullYear();
 
+      var API_BASE = "http://localhost:5000";
+
       (function() {
         var grid = document.getElementById("all-projects-grid");
-        var CACHE_KEY = "gh_repos_cache";
-        var CACHE_TTL = 5 * 60 * 1000;
-
-        function getCached() {
-          try {
-            var raw = localStorage.getItem(CACHE_KEY);
-            if (!raw) return null;
-            var data = JSON.parse(raw);
-            if (Date.now() - data.ts > CACHE_TTL) return null;
-            return data.repos;
-          } catch (e) { return null; }
-        }
 
         function renderRepos(repos) {
           grid.innerHTML = "";
@@ -86,50 +76,55 @@
             card.className = "card project-card";
 
             var meta = "";
-            if (repo.stargazers_count > 0 || repo.forks_count > 0) {
+            if (repo.stars > 0 || repo.forks > 0) {
               meta = '<div class="project-meta">';
-              if (repo.stargazers_count > 0) meta += '<span class="stars">&#9733; ' + repo.stargazers_count + '</span>';
-              if (repo.forks_count > 0) meta += '<span class="forks">' + repo.forks_count + ' forks</span>';
+              if (repo.stars > 0) meta += '<span class="stars">&#9733; ' + repo.stars + '</span>';
+              if (repo.forks > 0) meta += '<span class="forks">' + repo.forks + ' forks</span>';
               meta += '</div>';
             }
 
-            var desc = repo.description ? repo.description : "No description available.";
-            var lang = repo.language ? repo.language : "N/A";
-
             card.innerHTML = meta +
               '<h3 class="project-name">' + repo.name + '</h3>' +
-              '<p class="text-muted text-sm">' + desc + '</p>' +
-              '<span class="tag">' + lang + '</span>';
+              '<p class="text-muted text-sm">' + repo.description + '</p>' +
+              '<span class="tag">' + repo.language + '</span>';
 
             grid.appendChild(card);
           });
         }
 
-        var cached = getCached();
-        if (cached) { renderRepos(cached); return; }
-
         var retries = 3;
         function fetchWithRetry() {
-          fetch("https://api.github.com/users/Sajedur0/repos?sort=updated&per_page=100")
+          fetch(API_BASE + "/api/repos")
             .then(function(res) {
               if (!res.ok) throw new Error(res.status);
               return res.json();
             })
-            .then(function(repos) {
-              try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), repos: repos })); } catch (e) {}
-              renderRepos(repos);
+            .then(function(data) {
+              renderRepos(data.repos);
+              connectSSE();
             })
             .catch(function() {
               retries--;
               if (retries > 0) {
                 setTimeout(fetchWithRetry, 1500);
               } else {
-                var old = getCached();
-                if (old) { renderRepos(old); } else {
-                  grid.innerHTML = '<p class="text-muted text-sm">Could not load projects.</p>';
-                }
+                grid.innerHTML = '<p class="text-muted text-sm">Could not load projects.</p>';
               }
             });
+        }
+
+        function connectSSE() {
+          var es = new EventSource(API_BASE + "/api/events");
+          es.addEventListener("repos-updated", function(e) {
+            try {
+              var data = JSON.parse(e.data);
+              if (data.repos) renderRepos(data.repos);
+            } catch {}
+          });
+          es.onerror = function() {
+            es.close();
+            setTimeout(connectSSE, 5000);
+          };
         }
 
         fetchWithRetry();

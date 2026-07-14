@@ -22,43 +22,25 @@ mobileMenu.querySelectorAll("a").forEach(link => {
   });
 });
 
-// Hash-based routing: intercept internal nav clicks
-const routeMap = {
-  "#home": "home",
-  "#about": "about",
-  "#skills": "skills",
-  "#experience": "experience",
-  "#projects": "projects",
-  "#contact": "contact"
-};
+// Smooth scroll without hash in URL
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    const id = link.getAttribute("href").slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+      history.replaceState(null, "", window.location.pathname);
+    }
+  });
+});
 
-function navigateTo(hash) {
-  const sectionId = routeMap[hash];
-  if (!sectionId) return;
-  const target = document.getElementById(sectionId);
-  if (!target) return;
-  target.scrollIntoView({ behavior: "smooth" });
-  history.pushState(null, "", hash);
+// Strip hash from URL on load
+if (window.location.hash) {
+  const target = document.getElementById(window.location.hash.slice(1));
+  history.replaceState(null, "", window.location.pathname);
+  if (target) setTimeout(() => target.scrollIntoView({ behavior: "smooth" }), 100);
 }
-
-document.querySelectorAll('a[href]').forEach(link => {
-  const href = link.getAttribute("href");
-  if (href && routeMap[href]) {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      navigateTo(href);
-    });
-  }
-});
-
-window.addEventListener("popstate", () => {
-  const hash = window.location.hash;
-  const sectionId = routeMap[hash];
-  if (sectionId) {
-    const target = document.getElementById(sectionId);
-    if (target) target.scrollIntoView({ behavior: "smooth" });
-  }
-});
 
 // Fade-up reveal for cards as they enter the viewport.
 const revealTargets = document.querySelectorAll(".reveal");
@@ -80,11 +62,7 @@ if ("IntersectionObserver" in window && revealTargets.length) {
 // Highlight the current section's nav link while scrolling.
 const navLinks = document.querySelectorAll(".nav-links a");
 const sections = Array.from(navLinks)
-  .map(link => {
-    const hash = link.getAttribute("href");
-    const sectionId = routeMap[hash];
-    return sectionId ? document.getElementById(sectionId) : null;
-  })
+  .map(link => document.getElementById(link.getAttribute("href").replace("#", "")))
   .filter(Boolean);
 
 if ("IntersectionObserver" in window && sections.length) {
@@ -95,68 +73,38 @@ if ("IntersectionObserver" in window && sections.length) {
       navLinks.forEach(l => {
         l.classList.toggle("active", l.getAttribute("href") === hash);
       });
-      if (routeMap[hash]) history.replaceState(null, "", hash);
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
 
   sections.forEach(section => navObserver.observe(section));
 }
 
-// Scroll to section if URL has a hash on page load
-(function() {
-  var hash = window.location.hash;
-  if (hash && routeMap[hash]) {
-    setTimeout(function() {
-      var target = document.getElementById(hash.replace('#', ''));
-      if (target) target.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  }
-})();
-
 // Dynamic footer year
 document.getElementById("footer-year").textContent = new Date().getFullYear();
 
-// Dynamic repo count in hero-stats
+// Backend API — change to your deployed URL in production
+var API_BASE = "http://localhost:5000";
+
+// Dynamic repo count in hero-stats (fallback if SSE not connected yet)
 (function() {
   var el = document.getElementById("repo-count");
   if (!el) return;
 
-  fetch("https://api.github.com/users/Sajedur0/repos?per_page=1")
-    .then(function(res) {
-      var link = res.headers.get("Link");
-      if (link && link.includes('rel="last"')) {
-        var match = link.match(/page=(\d+)>; rel="last"/);
-        if (match) { el.textContent = match[1]; return; }
-      }
-      return res.json();
-    })
-    .then(function(repos) {
-      if (Array.isArray(repos)) el.textContent = repos.length;
-    })
-    .catch(function() {});
+  function refreshCount() {
+    fetch(API_BASE + "/api/repos/count")
+      .then(function(res) { return res.json(); })
+      .then(function(data) { if (data.count !== undefined) el.textContent = data.count; })
+      .catch(function() {});
+  }
+
+  refreshCount();
+  setInterval(refreshCount, 60000);
 })();
 
 // Dynamic GitHub Projects
 (function() {
   var grid = document.getElementById("projects-grid");
   if (!grid) return;
-
-  var CACHE_KEY = "gh_repos_cache";
-  var CACHE_TTL = 5 * 60 * 1000;
-
-  function getCached() {
-    try {
-      var raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return null;
-      var data = JSON.parse(raw);
-      if (Date.now() - data.ts > CACHE_TTL) return null;
-      return data.repos;
-    } catch (e) { return null; }
-  }
-
-  function setCache(repos) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), repos: repos })); } catch (e) {}
-  }
 
   function renderRepos(repos) {
     grid.innerHTML = "";
@@ -170,20 +118,17 @@ document.getElementById("footer-year").textContent = new Date().getFullYear();
       card.className = "card project-card reveal";
 
       var meta = "";
-      if (repo.stargazers_count > 0 || repo.forks_count > 0) {
+      if (repo.stars > 0 || repo.forks > 0) {
         meta = '<div class="project-meta">';
-        if (repo.stargazers_count > 0) meta += '<span class="stars">&#9733; ' + repo.stargazers_count + '</span>';
-        if (repo.forks_count > 0) meta += '<span class="forks">' + repo.forks_count + ' forks</span>';
+        if (repo.stars > 0) meta += '<span class="stars">&#9733; ' + repo.stars + '</span>';
+        if (repo.forks > 0) meta += '<span class="forks">' + repo.forks + ' forks</span>';
         meta += '</div>';
       }
 
-      var desc = repo.description ? repo.description : "No description available.";
-      var lang = repo.language ? repo.language : "N/A";
-
       card.innerHTML = meta +
         '<h3 class="project-name">' + repo.name + '</h3>' +
-        '<p class="text-muted text-sm">' + desc + '</p>' +
-        '<span class="tag">' + lang + '</span>';
+        '<p class="text-muted text-sm">' + repo.description + '</p>' +
+        '<span class="tag">' + repo.language + '</span>';
 
       grid.appendChild(card);
     });
@@ -215,41 +160,61 @@ document.getElementById("footer-year").textContent = new Date().getFullYear();
     });
   }
 
-  function showError() {
-    var cached = getCached();
-    if (cached) {
-      renderRepos(cached);
-      return;
-    }
-    grid.innerHTML = '<p class="text-muted text-sm">Could not load projects. <a href="https://github.com/Sajedur0?tab=repositories" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>';
-  }
-
-  var cached = getCached();
-  if (cached) {
-    renderRepos(cached);
-    return;
-  }
-
   var retries = 3;
   function fetchWithRetry() {
-    fetch("https://api.github.com/users/Sajedur0/repos?sort=updated&per_page=100")
+    fetch(API_BASE + "/api/repos")
       .then(function(res) {
         if (!res.ok) throw new Error(res.status);
         return res.json();
       })
-      .then(function(repos) {
-        setCache(repos);
-        renderRepos(repos);
+      .then(function(data) {
+        renderRepos(data.repos);
+        var countEl = document.getElementById("repo-count");
+        if (countEl && data.count !== undefined) countEl.textContent = data.count;
+        connectSSE();
       })
       .catch(function() {
         retries--;
         if (retries > 0) {
           setTimeout(fetchWithRetry, 1500);
         } else {
-          showError();
+          grid.innerHTML = '<p class="text-muted text-sm">Could not load projects. <a href="https://github.com/Sajedur0?tab=repositories" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>';
         }
       });
   }
 
+  function connectSSE() {
+    var es = new EventSource(API_BASE + "/api/events");
+    es.addEventListener("repos-updated", function(e) {
+      try {
+        var data = JSON.parse(e.data);
+        if (data.repos) renderRepos(data.repos);
+        var countEl = document.getElementById("repo-count");
+        if (countEl && data.count !== undefined) countEl.textContent = data.count;
+      } catch {}
+    });
+    es.addEventListener("connected", function() {
+      console.log("SSE connected — will receive instant updates");
+    });
+    es.onerror = function() {
+      es.close();
+      setTimeout(connectSSE, 5000);
+    };
+  }
+
   fetchWithRetry();
+
+  setInterval(function() {
+    fetch(API_BASE + "/api/repos")
+      .then(function(res) {
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        if (data.repos) renderRepos(data.repos);
+        var countEl = document.getElementById("repo-count");
+        if (countEl && data.count !== undefined) countEl.textContent = data.count;
+      })
+      .catch(function() {});
+  }, 60000);
 })();
