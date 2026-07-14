@@ -624,6 +624,18 @@ button:focus-visible {
   .hero-image-box { width: 360px; height: 360px; }
 }
 
+/* ===========================================================
+   Auto-update flash
+   =========================================================== */
+@keyframes update-flash {
+  0% { opacity: 0.45; }
+  100% { opacity: 1; }
+}
+.flash-update { animation: update-flash 0.5s ease-out; }
+
+/* ===========================================================
+   Reduced motion
+   =========================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

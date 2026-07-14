@@ -100,12 +100,23 @@ var API_BASE = window.__API_BASE__;
   function refreshCount() {
     fetch(API_BASE + "/api/repos/count")
       .then(function(res) { return res.json(); })
-      .then(function(data) { if (data.count !== undefined) el.textContent = data.count; })
+      .then(function(data) {
+        if (data.count !== undefined && el.textContent != data.count) {
+          el.textContent = data.count;
+          el.classList.remove("flash-update");
+          void el.offsetWidth;
+          el.classList.add("flash-update");
+        }
+      })
       .catch(function() {});
   }
 
   refreshCount();
-  setInterval(refreshCount, 60000);
+  setInterval(refreshCount, 30000);
+
+  document.addEventListener("visibilitychange", function() {
+    if (!document.hidden) refreshCount();
+  });
 })();
 
 // Dynamic GitHub Projects
@@ -211,7 +222,13 @@ var API_BASE = window.__API_BASE__;
 
   fetchWithRetry();
 
-  setInterval(function() {
+  function flashGrid() {
+    grid.classList.remove("flash-update");
+    void grid.offsetWidth;
+    grid.classList.add("flash-update");
+  }
+
+  function pollRepos() {
     fetch(API_BASE + "/api/repos")
       .then(function(res) {
         if (!res.ok) throw new Error(res.status);
@@ -221,7 +238,17 @@ var API_BASE = window.__API_BASE__;
         if (data.repos) renderRepos(data.repos);
         var countEl = document.getElementById("repo-count");
         if (countEl && data.count !== undefined) countEl.textContent = data.count;
+        flashGrid();
       })
       .catch(function() {});
-  }, 60000);
+  }
+
+  var pollTimer = setInterval(pollRepos, 30000);
+
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) return;
+    clearInterval(pollTimer);
+    pollRepos();
+    pollTimer = setInterval(pollRepos, 30000);
+  });
 })();

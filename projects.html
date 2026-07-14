@@ -61,7 +61,7 @@
     <script>
       document.getElementById("footer-year").textContent = new Date().getFullYear();
 
-      var API_BASE = "http://localhost:5000";
+      var API_BASE = "https://sajedur0-github-io-backend.vercel.app";
 
       (function() {
         var grid = document.getElementById("all-projects-grid");
@@ -118,7 +118,10 @@
           es.addEventListener("repos-updated", function(e) {
             try {
               var data = JSON.parse(e.data);
-              if (data.repos) renderRepos(data.repos);
+              if (data.repos) {
+                renderRepos(data.repos);
+                flashGrid();
+              }
             } catch {}
           });
           es.onerror = function() {
@@ -127,7 +130,35 @@
           };
         }
 
+        function flashGrid() {
+          grid.classList.remove("flash-update");
+          void grid.offsetWidth;
+          grid.classList.add("flash-update");
+        }
+
+        function pollRepos() {
+          fetch(API_BASE + "/api/repos")
+            .then(function(res) {
+              if (!res.ok) throw new Error(res.status);
+              return res.json();
+            })
+            .then(function(data) {
+              if (data.repos) renderRepos(data.repos);
+              flashGrid();
+            })
+            .catch(function() {});
+        }
+
         fetchWithRetry();
+
+        var pollTimer = setInterval(pollRepos, 30000);
+
+        document.addEventListener("visibilitychange", function() {
+          if (document.hidden) return;
+          clearInterval(pollTimer);
+          pollRepos();
+          pollTimer = setInterval(pollRepos, 30000);
+        });
       })();
     </script>
   </body>
