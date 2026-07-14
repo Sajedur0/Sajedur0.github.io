@@ -43,25 +43,6 @@ A personal portfolio website for **MD Sajedur Rahman Roni** — a software & har
 ---
 
 
-## Local Development
-
-This is a static site — no build step required.
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/Sajedur0/Sajedur0.github.io.git
-   ```
-2. Open `index.html` in a browser, or use a local server:
-   ```bash
-   # Python
-   python -m http.server 8000
-
-   # Node.js
-   npx serve .
-   ```
-
----
-
 ## Deployment
 
 Hosted on **GitHub Pages**. Push to the `main` branch and the site updates automatically.
