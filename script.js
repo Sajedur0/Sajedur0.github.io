@@ -82,8 +82,15 @@ if ("IntersectionObserver" in window && sections.length) {
 // Dynamic footer year
 document.getElementById("footer-year").textContent = new Date().getFullYear();
 
-// Backend API — change to your deployed URL in production
-var API_BASE = "http://localhost:5000";
+// Obfuscated backend endpoint (XOR-decoded at runtime)
+(function () {
+  var _k = [17, 23, 5, 11, 2, 31, 7, 13];
+  var _c = [121,99,113,123,113,37,40,34,98,118,111,110,102,106,117,61,60,112,108,127,106,106,101,32,120,120,40,105,99,124,108,104,127,115,43,125,103,109,100,104,125,57,100,123,114];
+  var _s = "";
+  for (var _i = 0; _i < _c.length; _i++) _s += String.fromCharCode(_c[_i] ^ _k[_i % _k.length]);
+  window.__API_BASE__ = _s;
+})();
+var API_BASE = window.__API_BASE__;
 
 // Dynamic repo count in hero-stats (fallback if SSE not connected yet)
 (function() {
